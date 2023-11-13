@@ -1,6 +1,6 @@
-!---------------------------3D LJ Mixture at RHO=.8442,T=0.728---------------------------------
+!---------------------------3D LJ Mixture at RHO=0.3,T=0.5---------------------------------
 !-----------------------------implementing NVE MD-----------------------------------
-!-------------------------particles are originating on a lattice--------------------------
+!-------------------------particles are intially randomly placed--------------------------
 	program molecular_dynamics
 	implicit none
 	integer*4,parameter :: n = 2000	! no. of particles
@@ -20,8 +20,8 @@
         open(16,file='dt_energy-variance',status='unknown')
 	idum = 45678
 
-	rho = 0.3
-	temp = 0.5
+	rho = 0.3d0
+	temp = 0.5d0
 	dt = 0.005d0
 	
 	l = int((dble(n)/rho)**(1d0/3d0))	! length of cubical box
@@ -228,32 +228,14 @@
         dist = sigma**2d0	! square of the minimum permissible distance b/w two particles
 	  
 	  open(13,file='rho_0.3',status='unknown')
-        
-        !do i=1,l
-        !  do j=1,l
-	    !    do k=1,l
-        !      cell(i,j,k) = -1 	! initially all cells are vacant
-	        !part(i,j) = 0 		! initially no particle present anywhere
-		!    enddo
-        !  enddo
-        !enddo        
-
 !------ randomly generating 1st particle -----------------------------------------------------
-	!p = int(l*ran3(idum)) + 1
-	!q = int(l*ran3(idum)) + 1
-	!r = int(l*ran3(idum)) + 1
-	!if (p.eq.l+1)p=1
-	!if (q.eq.l+1)q=1
-	!if (r.eq.l+1)r=1
-	!cell(p,q,r) = 1   ! occupying the 1st particle
 	x00 = l*ran3(idum)
 	y00 = l*ran3(idum)
 	z00 = l*ran3(idum)
 	x(i1) = x00
 	y(i1) = y00
 	z(i1) = z00
-	!print *,p,q,r,cell(p,q,r)
-
+ !------generating subsequent particles -----------------------------------------------------
 15	x0 = l*ran3(idum)
 	y0 = l*ran3(idum)
 	z0 = l*ran3(idum)
@@ -286,14 +268,7 @@
 !-------write particle co-ordinates in file ------------------------------------------------
 	do i=1,n
 	  write(13,*) x(i),y(i),z(i)
-	enddo
-	
-	!do i=1,l
-	!do j=1,l
-	!  write(2,*) i,j, cell(i,j)
-	!enddo
-	!enddo
-	
+	enddo	
 !-------------------------------------------------------------------------------------------
         !checking pair distances and printing them
 	!do i=1,n-1
